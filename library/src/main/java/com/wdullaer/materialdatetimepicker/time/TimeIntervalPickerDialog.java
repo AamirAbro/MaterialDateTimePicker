@@ -549,7 +549,8 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
             paramsSeparator.addRule(RelativeLayout.CENTER_IN_PARENT);
             TextView separatorView = (TextView) view.findViewById(R.id.separator);
             separatorView.setLayoutParams(paramsSeparator);
-        } else if (mEnableSeconds) {
+        }
+//        else if (mEnableSeconds) {
 //            // link separator to minutes
 //            final View separator = view.findViewById(R.id.separator);
 //            RelativeLayout.LayoutParams paramsSeparator = new RelativeLayout.LayoutParams(
@@ -571,7 +572,7 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
 //                paramsMinutes.addRule(RelativeLayout.RIGHT_OF, R.id.center_view);
 //                mMinuteSpaceView.setLayoutParams(paramsMinutes);
 //            }
-        }
+//        }
 
         mAllowAutoAdvance = true;
         setHour(mInitialTime.getHour(), mInitialTime.getMinute(), true);
@@ -738,7 +739,7 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
     public boolean isOutOfRange(Timepoint current) {
         if(mSelectableTimes != null) return !Arrays.asList(mSelectableTimes).contains(current);
 
-        if(mMinTime != null && (mMinTime.compareTo(current) > 0 || mMinTime.getMinute() % interval != 0)) return true;
+        if(current.getMinute() % interval != 0 || (mMinTime != null && (mMinTime.compareTo(current) > 0))) return true;
 
         if(mMaxTime != null && mMaxTime.compareTo(current) < 0) return true;
 
@@ -763,6 +764,10 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
             return false;
         }
         else if(index == MINUTE_INDEX) {
+            if (current.getMinute() % interval != 0 ) {
+                return true;
+            }
+
             if(mSelectableTimes != null) {
                 for(Timepoint t : mSelectableTimes) {
                     if(t.getHour() == current.getHour() && t.getMinute() == current.getMinute()) return false;
@@ -776,9 +781,7 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
 
             if(mMaxTime != null) {
                 Timepoint roundedMax = new Timepoint(mMaxTime.getHour(), mMaxTime.getMinute(), 59);
-                if (roundedMax.getMinute() % interval == 0) {
-                    if (roundedMax.compareTo(current) < 0) return true;
-                }
+                if (roundedMax.compareTo(current) < 0) return true;
             }
 
             return false;

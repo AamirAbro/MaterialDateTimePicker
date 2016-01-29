@@ -90,6 +90,7 @@ public class RadialIntervalTextsView extends BaseRadialTextsView {
 
     public void setInterval (int interval) {
         this.interval = interval;
+        this.invalidate();
     }
 
     public void initialize(Context context, String[] texts, String[] innerTexts,
@@ -295,7 +296,9 @@ public class RadialIntervalTextsView extends BaseRadialTextsView {
         for(int i=0;i<texts.length;i++) {
             int text = Integer.parseInt(texts[i]);
             if(text == selection || text == (selection + interval)%60 ) paints[i] = mSelectedPaint;
-            else if(mValidator.isValidSelection(text)) paints[i] = mPaint;
+            else if(mValidator.isValidSelection(text)) {
+                paints[i] = mPaint;
+            }
             else paints[i] = mInactivePaint;
         }
         return paints;

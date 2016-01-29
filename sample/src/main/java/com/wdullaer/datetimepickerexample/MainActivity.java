@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements
     private CheckBox showYearFirst;
     private CheckBox enableSeconds;
 
-    int interval = 5;
+    int interval = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
