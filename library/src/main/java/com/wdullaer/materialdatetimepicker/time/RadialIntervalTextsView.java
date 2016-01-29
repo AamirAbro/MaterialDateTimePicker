@@ -32,11 +32,12 @@ import android.util.Log;
 import android.view.View;
 
 import com.wdullaer.materialdatetimepicker.R;
+import com.wdullaer.materialdatetimepicker.time.RadialTextsView.SelectionValidator;
 
 /**
  * A view to show a series of numbers in a circular pattern.
  */
-public class RadialTextsView extends BaseRadialTextsView {
+public class RadialIntervalTextsView extends BaseRadialTextsView {
     private final static String TAG = "RadialTextsView";
 
     private final Paint mPaint = new Paint();
@@ -80,14 +81,19 @@ public class RadialTextsView extends BaseRadialTextsView {
     ObjectAnimator mDisappearAnimator;
     ObjectAnimator mReappearAnimator;
     private InvalidateUpdateListener mInvalidateUpdateListener;
+    private int interval;
 
-    public RadialTextsView(Context context) {
+    public RadialIntervalTextsView(Context context) {
         super(context);
         mIsInitialized = false;
     }
 
+    public void setInterval (int interval) {
+        this.interval = interval;
+    }
+
     public void initialize(Context context, String[] texts, String[] innerTexts,
-            TimePickerController controller, SelectionValidator validator, boolean disappearsOut) {
+                           TimePickerController controller, SelectionValidator validator, boolean disappearsOut) {
         if (mIsInitialized) {
             Log.e(TAG, "This RadialTextsView may only be initialized once.");
             return;
@@ -95,7 +101,7 @@ public class RadialTextsView extends BaseRadialTextsView {
         Resources res = context.getResources();
 
         // Set up the paint.
-        int textColorRes = controller.isThemeDark() ? R.color.mdtp_white : R.color.mdtp_numbers_text_color;
+        int textColorRes = controller.isThemeDark() ? R.color.mdtp_white : R.color.mdtp_date_picker_text_disabled;
         mPaint.setColor(ContextCompat.getColor(context, textColorRes));
         String typefaceFamily = res.getString(R.string.mdtp_radial_numbers_typeface);
         mTypefaceLight = Typeface.create(typefaceFamily, Typeface.NORMAL);
@@ -105,14 +111,13 @@ public class RadialTextsView extends BaseRadialTextsView {
         mPaint.setTextAlign(Align.CENTER);
 
         // Set up the selected paint
-        int selectedTextColor = ContextCompat.getColor(context, R.color.mdtp_white);
+        int selectedTextColor = ContextCompat.getColor(context, R.color.mdtp_numbers_text_color);
         mSelectedPaint.setColor(selectedTextColor);
         mSelectedPaint.setAntiAlias(true);
         mSelectedPaint.setTextAlign(Align.CENTER);
 
         // Set up the inactive paint
-        int inactiveColorRes = controller.isThemeDark() ? R.color.mdtp_date_picker_text_disabled_dark_theme
-                : R.color.mdtp_date_picker_text_disabled;
+        int inactiveColorRes = android.R.color.transparent;
         mInactivePaint.setColor(ContextCompat.getColor(context, inactiveColorRes));
         mInactivePaint.setAntiAlias(true);
         mInactivePaint.setTextAlign(Align.CENTER);
@@ -254,7 +259,7 @@ public class RadialTextsView extends BaseRadialTextsView {
      * textGridWidths parameters.
      */
     private void calculateGridSizes(float numbersRadius, float xCenter, float yCenter,
-            float textSize, float[] textGridHeights, float[] textGridWidths) {
+                                    float textSize, float[] textGridHeights, float[] textGridWidths) {
         /*
          * The numbers need to be drawn in a 7x7 grid, representing the points on the Unit Circle.
          */
@@ -289,7 +294,7 @@ public class RadialTextsView extends BaseRadialTextsView {
         Paint[] paints = new Paint[texts.length];
         for(int i=0;i<texts.length;i++) {
             int text = Integer.parseInt(texts[i]);
-            if(text == selection) paints[i] = mSelectedPaint;
+            if(text == selection || text == (selection + interval)%60 ) paints[i] = mSelectedPaint;
             else if(mValidator.isValidSelection(text)) paints[i] = mPaint;
             else paints[i] = mInactivePaint;
         }
@@ -300,7 +305,7 @@ public class RadialTextsView extends BaseRadialTextsView {
      * Draw the 12 text values at the positions specified by the textGrid parameters.
      */
     private void drawTexts(Canvas canvas, float textSize, Typeface typeface, String[] texts,
-            float[] textGridWidths, float[] textGridHeights) {
+                           float[] textGridWidths, float[] textGridHeights) {
         mPaint.setTextSize(textSize);
         mPaint.setTypeface(typeface);
         Paint[] textPaints = assignTextColors(texts);
@@ -388,11 +393,11 @@ public class RadialTextsView extends BaseRadialTextsView {
     private class InvalidateUpdateListener implements AnimatorUpdateListener {
         @Override
         public void onAnimationUpdate(ValueAnimator animation) {
-            RadialTextsView.this.invalidate();
+            RadialIntervalTextsView.this.invalidate();
         }
     }
 
-    public interface SelectionValidator {
-        boolean isValidSelection(int selection);
-    }
+//    public interface SelectionValidator {
+//        boolean isValidSelection(int selection);
+//    }
 }

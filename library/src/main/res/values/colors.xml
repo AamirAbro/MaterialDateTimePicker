@@ -36,6 +36,8 @@
     <color name="mdtp_date_picker_text_disabled">#ccc</color>
     <color name="mdtp_date_picker_month_day">#767676</color>
 
+    <color name="mdtp_interval_divider_color">#bfcf81</color>
+
     <!-- DatePicker Dark Theme -->
     <color name="mdtp_date_picker_view_animator_dark_theme">@color/mdtp_light_gray</color>
     <color name="mdtp_date_picker_text_normal_dark_theme">@color/mdtp_white</color>

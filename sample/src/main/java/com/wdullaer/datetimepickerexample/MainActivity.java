@@ -13,12 +13,15 @@ import android.widget.TextView;
 import com.wdullaer.materialdatetimepicker.Utils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimeIntervalPickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.Timepoint;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements
-    TimePickerDialog.OnTimeSetListener,
+    TimeIntervalPickerDialog.OnTimeSetListener,
     DatePickerDialog.OnDateSetListener
 {
     private TextView timeTextView;
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements
     private CheckBox titleDate;
     private CheckBox showYearFirst;
     private CheckBox enableSeconds;
+
+    int interval = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,28 +75,34 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 Calendar now = Calendar.getInstance();
-                TimePickerDialog tpd = TimePickerDialog.newInstance(
+                TimeIntervalPickerDialog tpd = TimeIntervalPickerDialog.newInstance(
                         MainActivity.this,
                         now.get(Calendar.HOUR_OF_DAY),
                         now.get(Calendar.MINUTE),
-                        mode24Hours.isChecked()
+                        mode24Hours.isChecked(),
+                        interval
                 );
-                tpd.setThemeDark(modeDarkTime.isChecked());
-                tpd.vibrate(vibrateTime.isChecked());
-                tpd.dismissOnPause(dismissTime.isChecked());
-                tpd.enableSeconds(enableSeconds.isChecked());
-                if (modeCustomAccentTime.isChecked()) {
-                    tpd.setAccentColor(Color.parseColor("#9C27B0"));
-                }
-                if (titleTime.isChecked()) {
-                    tpd.setTitle("TimePicker Title");
-                }
-                tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialogInterface) {
-                        Log.d("TimePicker", "Dialog was cancelled");
-                    }
-                });
+                tpd.setThemeDark(false);
+                tpd.vibrate(false);
+//                tpd.dismissOnPause(dismissTime.isChecked());
+//                tpd.enableSeconds(enableSeconds.isChecked());
+
+                Timepoint minTime = new Timepoint(3, 13, 0);
+                tpd.setMinTime(minTime);
+//                tpd.setSelectableTimes(getSelectableTimes(minTime));
+
+//                if (modeCustomAccentTime.isChecked()) {
+//                    tpd.setAccentColor(Color.parseColor("#9C27B0"));
+//                }
+//                if (titleTime.isChecked()) {
+//                    tpd.setTitle("TimePicker Title");
+//                }
+//                tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//                    @Override
+//                    public void onCancel(DialogInterface dialogInterface) {
+//                        Log.d("TimePicker", "Dialog was cancelled");
+//                    }
+//                });
                 tpd.show(getFragmentManager(), "Timepickerdialog");
             }
         });
@@ -122,10 +133,35 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+    Timepoint[] getSelectableTimes (Timepoint minTime) {
+        ArrayList<Timepoint> times = new ArrayList<>();
+        for (int i = 0; i < 24; i++) {
+            for (int j = 0; j < 60 / interval; j++) {
+                Timepoint selectableTime = new Timepoint(i, interval * j);
+                if (selectableTime.compareTo(minTime) >= 0) {
+                    times.add(selectableTime);
+                }
+            }
+        }
+        times.add(new Timepoint(24, 0, 0));
+        return times.toArray(new Timepoint[times.size()]);
+    }
+
+    Timepoint[] getSelectableTimes () {
+        ArrayList<Timepoint> times = new ArrayList<>();
+        for (int i = 0; i < 24; i++) {
+            for (int j = 0; j < 60 / interval; j++) {
+                Timepoint selectableTime = new Timepoint(i, interval * j);
+                times.add(selectableTime);
+            }
+        }
+        return times.toArray(new Timepoint[times.size()]);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        TimePickerDialog tpd = (TimePickerDialog) getFragmentManager().findFragmentByTag("Timepickerdialog");
+        TimeIntervalPickerDialog tpd = (TimeIntervalPickerDialog) getFragmentManager().findFragmentByTag("Timepickerdialog");
         DatePickerDialog dpd = (DatePickerDialog) getFragmentManager().findFragmentByTag("Datepickerdialog");
 
         if(tpd != null) tpd.setOnTimeSetListener(this);
@@ -133,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+    public void onTimeSet(int hourOfDay, int minute, int second) {
         String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
         String minuteString = minute < 10 ? "0"+minute : ""+minute;
         String secondString = second < 10 ? "0"+second : ""+second;
