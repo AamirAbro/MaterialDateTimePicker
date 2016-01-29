@@ -5,7 +5,7 @@
 
 
 Material DateTime Picker tries to offer you the date and time pickers as shown in [the Material Design spec](http://www.google.com/design/spec/components/pickers.html), with an
-easy themable API.
+easy themable API. With added picker to select fixed interval
 The library uses [the code from the Android frameworks](https://android.googlesource.com/platform/frameworks/opt/datetimepicker/) as a base and tweaked it to be as close as possible to Material Design example.
 
 Support for Android 4.0 and up.
@@ -14,7 +14,7 @@ Feel free to fork or issue pull requests on github. Issues can be reported on th
 
 Date Picker | Time Picker
 ---- | ----
-![Date Picker](https://raw.github.com/wdullaer/MaterialDateTimePicker/gh-pages/images/date_picker.png) | ![Time Picker](https://raw.github.com/wdullaer/MaterialDateTimePicker/gh-pages/images/time_picker.png)
+![Date Picker](https://raw.github.com/wdullaer/MaterialDateTimePicker/gh-pages/images/date_picker.png) | ![Time Picker](https://raw.github.com/wdullaer/MaterialDateTimePicker/gh-pages/images/time_picker.png) | ![Time Interval Picker](/IntervalPicker.png?raw=true "Time Interval Picker")
 
 
 ## Table of Contents
