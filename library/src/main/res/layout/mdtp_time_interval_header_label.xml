@@ -165,7 +165,7 @@
         android:text="-"
         android:paddingLeft="@dimen/mdtp_separator_padding"
         android:paddingRight="@dimen/mdtp_separator_padding"
-        android:textColor="@color/mdtp_white"
+        android:textColor="@color/mdtp_accent_color_focused"
         android:gravity="center_horizontal"
         android:layout_gravity="center"
         style="@style/mdtp_time_interval_label" />

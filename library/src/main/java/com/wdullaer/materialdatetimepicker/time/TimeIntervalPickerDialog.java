@@ -575,9 +575,10 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
 //        }
 
         mAllowAutoAdvance = true;
-        setHour(mInitialTime.getHour(), mInitialTime.getMinute(), true);
-        setMinute(mInitialTime.getMinute());
-        setSecond(mInitialTime.getSecond());
+//        setHour(mInitialTime.getHour(), mInitialTime.getMinute(), true);
+//        setMinute(mInitialTime.getMinute());
+//        setSecond(mInitialTime.getSecond());
+        onValueSelected(mInitialTime);
 
         // Set up for keyboard mode.
         mDoublePlaceholderText = res.getString(R.string.mdtp_time_placeholder);
@@ -711,7 +712,16 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
         mTimePicker.setContentDescription(mMinutePickerDescription + ": " + newValue.getMinute());
         setSecond(newValue.getSecond());
         mTimePicker.setContentDescription(mSecondPickerDescription + ": " + newValue.getSecond());
-        if(!mIs24HourMode) updateAmPmDisplay(newValue.isAM() ? AM : PM);
+//        if(!mIs24HourMode) updateAmPmDisplay(newValue.isAM() ? AM : PM);
+        if(!mIs24HourMode) {
+            Timepoint endTime;
+            if (newValue.getMinute() + interval >= 60) {
+                endTime = new Timepoint(newValue.getHour() + 1, newValue.getMinute(), newValue.getSecond());
+            } else {
+                endTime = newValue;
+            }
+            updateAmPmDisplay(endTime.isAM() ? AM : PM);
+        }
     }
 
     @Override
