@@ -23,7 +23,8 @@
     android:background="@color/mdtp_accent_color"
     android:clipChildren="false"
     android:orientation="horizontal"
-    android:gravity="center">
+    android:gravity="center"
+    android:layoutDirection="ltr">
     <!--<View-->
     <!--android:id="@+id/center_view"-->
     <!--android:layout_width="1dp"-->
