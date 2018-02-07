@@ -55,13 +55,13 @@ public class MainActivity extends AppCompatActivity implements
         mode24Hours = (CheckBox)findViewById(R.id.mode_24_hours);
         modeDarkTime = (CheckBox)findViewById(R.id.mode_dark_time);
         modeDarkDate = (CheckBox)findViewById(R.id.mode_dark_date);
-        modeCustomAccentTime = (CheckBox) findViewById(R.id.mode_custom_accent_time);
+//        modeCustomAccentTime = (CheckBox) findViewById(R.id.mode_custom_accent_time);
         modeCustomAccentDate = (CheckBox) findViewById(R.id.mode_custom_accent_date);
-        vibrateTime = (CheckBox) findViewById(R.id.vibrate_time);
+//        vibrateTime = (CheckBox) findViewById(R.id.vibrate_time);
         vibrateDate = (CheckBox) findViewById(R.id.vibrate_date);
-        dismissTime = (CheckBox) findViewById(R.id.dismiss_time);
+//        dismissTime = (CheckBox) findViewById(R.id.dismiss_time);
         dismissDate = (CheckBox) findViewById(R.id.dismiss_date);
-        titleTime = (CheckBox) findViewById(R.id.title_time);
+//        titleTime = (CheckBox) findViewById(R.id.title_time);
         titleDate = (CheckBox) findViewById(R.id.title_date);
         showYearFirst = (CheckBox) findViewById(R.id.show_year_first);
         enableSeconds = (CheckBox) findViewById(R.id.enable_seconds);
