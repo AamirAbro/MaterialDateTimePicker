@@ -30,6 +30,7 @@ import com.wdullaer.materialdatetimepicker.R;
 import com.wdullaer.materialdatetimepicker.Utils;
 
 import java.text.DateFormatSymbols;
+import java.util.Locale;
 
 /**
  * Draw the two smaller AM and PM circles next to where the larger circle will be.
@@ -73,7 +74,7 @@ public class AmPmCirclesView extends View {
         mIsInitialized = false;
     }
 
-    public void initialize(Context context, TimePickerController controller, int amOrPm) {
+    public void initialize(Context context, Locale locale, TimePickerController controller, int amOrPm) {
         if (mIsInitialized) {
             Log.e(TAG, "AmPmCirclesView may only be initialized once.");
             return;
@@ -107,7 +108,7 @@ public class AmPmCirclesView extends View {
                 Float.parseFloat(res.getString(R.string.mdtp_circle_radius_multiplier));
         mAmPmCircleRadiusMultiplier =
                 Float.parseFloat(res.getString(R.string.mdtp_ampm_circle_radius_multiplier));
-        String[] amPmTexts = new DateFormatSymbols().getAmPmStrings();
+        String[] amPmTexts = new DateFormatSymbols(locale).getAmPmStrings();
         mAmText = amPmTexts[0];
         mPmText = amPmTexts[1];
 
@@ -167,6 +168,7 @@ public class AmPmCirclesView extends View {
             int circleRadius =
                     (int) (Math.min(layoutXCenter, layoutYCenter) * mCircleRadiusMultiplier);
             mAmPmCircleRadius = (int) (circleRadius * mAmPmCircleRadiusMultiplier);
+
             layoutYCenter += mAmPmCircleRadius*0.75;
             int textSize = mAmPmCircleRadius * 3 / 4;
             mPaint.setTextSize(textSize);
@@ -177,6 +179,8 @@ public class AmPmCirclesView extends View {
             // of the main circle.
             mAmXCenter = layoutXCenter - circleRadius + mAmPmCircleRadius;
             mPmXCenter = layoutXCenter + circleRadius - mAmPmCircleRadius;
+
+
 
             mDrawValuesReady = true;
         }

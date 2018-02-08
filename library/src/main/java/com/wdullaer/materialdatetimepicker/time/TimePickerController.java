@@ -5,7 +5,7 @@ package com.wdullaer.materialdatetimepicker.time;
  *
  * Created by wdullaer on 6/10/15.
  */
-public interface TimePickerController {
+interface TimePickerController {
     /**
      * @return boolean - true if the dark theme should be used
      */
@@ -20,6 +20,11 @@ public interface TimePickerController {
      * @return int - the accent color currently in use
      */
     int getAccentColor();
+
+    /**
+     * @return Version - The current version to render
+     */
+    TimePickerDialog.Version getVersion();
 
     /**
      * Request the device to vibrate

@@ -43,6 +43,7 @@ import com.wdullaer.materialdatetimepicker.R;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout.OnValueSelectedListener;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * The primary layout to hold the circular picker, and the am/pm buttons. This view will measure
@@ -186,7 +187,7 @@ public class RadialIntervalPickerLayout extends FrameLayout implements OnTouchLi
         mCircleView.initialize(context, mController);
         mCircleView.invalidate();
         if (!mIs24HourMode) {
-            mAmPmCirclesView.initialize(context, mController, initialTime.isAM() ? AM : PM);
+            mAmPmCirclesView.initialize(context, Locale.getDefault(), mController, initialTime.isAM() ? AM : PM);
             mAmPmCirclesView.invalidate();
         }
 

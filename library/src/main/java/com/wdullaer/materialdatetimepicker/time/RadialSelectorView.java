@@ -107,7 +107,7 @@ public class RadialSelectorView extends BaseRadialSelectorView {
 
         // Calculate values for the circle radius size.
         mIs24HourMode = controller.is24HourMode();
-        if (mIs24HourMode) {
+        if (mIs24HourMode || controller.getVersion() != TimePickerDialog.Version.VERSION_1) {
             mCircleRadiusMultiplier = Float.parseFloat(
                     res.getString(R.string.mdtp_circle_radius_multiplier_24HourMode));
         } else {
