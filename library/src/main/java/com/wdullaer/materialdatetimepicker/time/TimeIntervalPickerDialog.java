@@ -23,11 +23,13 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -37,6 +39,7 @@ import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,7 +59,7 @@ import java.util.Locale;
  */
 public class TimeIntervalPickerDialog extends DialogFragment implements
         OnValueSelectedListener, TimePickerController {
-    private static final String TAG = "TimePickerDialog";
+    private static final String TAG = "TimeIntervalDialog";
 
     private static final String KEY_INITIAL_TIME = "initial_time";
     private static final String KEY_IS_24_HOUR_VIEW = "is_24_hour_view";
@@ -77,6 +80,7 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
     private static final String KEY_OK_STRING = "ok_string";
     private static final String KEY_CANCEL_RESID = "cancel_resid";
     private static final String KEY_CANCEL_STRING = "cancel_string";
+    private static final String KEY_VERSION = "version";
 
     public static final int HOUR_INDEX = 0;
     public static final int MINUTE_INDEX = 1;
@@ -132,6 +136,7 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
     private String mOkString;
     private int mCancelResid;
     private String mCancelString;
+    private TimePickerDialog.Version mVersion;
 
     // For hardware IME input.
     private char mPlaceholderText;
@@ -201,6 +206,8 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
         mOkResid = R.string.mdtp_ok;
         mCancelResid = R.string.mdtp_cancel;
 
+        mVersion = Build.VERSION.SDK_INT < Build.VERSION_CODES.M ? TimePickerDialog.Version.VERSION_1 : TimePickerDialog.Version.VERSION_2;
+
     }
 
     /**
@@ -239,6 +246,11 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
     @Override
     public int getAccentColor() {
         return mAccentColor;
+    }
+
+    @Override
+    public TimePickerDialog.Version getVersion() {
+        return mVersion;
     }
 
     /**
@@ -388,13 +400,14 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
             mOkString = savedInstanceState.getString(KEY_OK_STRING);
             mCancelResid = savedInstanceState.getInt(KEY_CANCEL_RESID);
             mCancelString = savedInstanceState.getString(KEY_CANCEL_STRING);
+            mVersion = (TimePickerDialog.Version) savedInstanceState.getSerializable(KEY_VERSION);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+       // int viewRes = mVersion == TimePickerDialog.Version.VERSION_1 ? R.layout.mdtp_time_picker_dialog : R.layout.mdtp_time_picker_dialog_v2;
         View view = inflater.inflate(R.layout.mdtp_time_interval_picker_dialog, container,false);
         KeyboardListener keyboardListener = new KeyboardListener();
         view.findViewById(R.id.time_picker_dialog).setOnKeyListener(keyboardListener);
@@ -480,7 +493,7 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
             }
         });
 
-        mOkButton = (Button) view.findViewById(R.id.ok);
+        mOkButton = (Button) view.findViewById(R.id.mdtp_ok);
         mOkButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -498,7 +511,7 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
         if(mOkString != null) mOkButton.setText(mOkString);
         else mOkButton.setText(mOkResid);
 
-        mCancelButton = (Button) view.findViewById(R.id.cancel);
+        mCancelButton = (Button) view.findViewById(R.id.mdtp_cancel);
         mCancelButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -545,9 +558,9 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
         // Center stuff depending on what's visible
         if (mIs24HourMode && !mEnableSeconds) {
             // center first separator
-            RelativeLayout.LayoutParams paramsSeparator = new RelativeLayout.LayoutParams(
+            LinearLayout.LayoutParams paramsSeparator = new LinearLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            paramsSeparator.addRule(RelativeLayout.CENTER_IN_PARENT);
+            paramsSeparator.gravity = Gravity.CENTER ;
             TextView separatorView = (TextView) view.findViewById(R.id.separator);
             separatorView.setLayoutParams(paramsSeparator);
         }
@@ -611,7 +624,7 @@ public class TimeIntervalPickerDialog extends DialogFragment implements
         view.findViewById(R.id.time_display).setBackgroundColor(mAccentColor);
 
         if(getDialog() == null) {
-            view.findViewById(R.id.done_background).setVisibility(View.GONE);
+            view.findViewById(R.id.mdtp_done_background).setVisibility(View.GONE);
         }
 
         int circleBackground = ContextCompat.getColor(context, R.color.mdtp_circle_background);
